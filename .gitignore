@@ -1,0 +1,19 @@
+# Entorno virtual
+venv/
+
+# Variables de entorno (contiene tu API key, NUNCA subir a GitHub)
+.env
+
+# Base de datos vectorial (se regenera con python -m app.ingest)
+chroma_db/
+
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Cache de HuggingFace (modelos descargados)
+.cache/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
