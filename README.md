@@ -188,7 +188,7 @@ Respuesta:
 > encuentre en las condiciones indicadas (empaque original, sin uso, con todos sus
 > accesorios). Para iniciar el proceso, solo necesitas contactarnos con tu número de pedido
 > y el motivo de la devolución. Si tienes alguna duda adicional sobre tu caso en particular,
-> aquí estoy para ayudarte. 😊
+> aquí estoy para ayudarte. 
 
 **Pregunta:**
 > ¿Hacen envíos a todo el país?
