@@ -1,6 +1,13 @@
 """
 Cadena RAG (Retrieval-Augmented Generation) construida con LangChain LCEL.
 
+import os
+
+# Limita hilos de torch/tokenizers ANTES de importarlos: reduce picos de RAM,
+# clave en entornos con memoria limitada como el plan free de Render.
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
 Flujo:
   pregunta del usuario
       -> retriever (ChromaDB + embeddings locales) busca los fragmentos relevantes

@@ -16,6 +16,11 @@ desde cero en cada corrida (borra y vuelve a crear).
 """
 import os
 import shutil
+import os
+import shutil
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 from langchain_community.document_loaders import (
     DirectoryLoader,
