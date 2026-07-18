@@ -3,6 +3,7 @@ API FastAPI que expone el Agente de IA de atención al cliente.
 
 Endpoints:
   GET  /health         -> chequeo de salud del servicio
+  GET  /               -> interfaz de chat (HTML)
   POST /chat           -> envía un mensaje y recibe la respuesta del agente
 """
 from collections import defaultdict
@@ -10,6 +11,7 @@ from typing import List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from langchain_core.messages import HumanMessage, AIMessage
 from pydantic import BaseModel, Field
 
@@ -22,7 +24,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Ajusta esto en producción a los dominios reales de tu frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,9 +31,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Historial en memoria por sesión (simple; para producción real usar Redis/DB)
 _session_history: dict[str, List] = defaultdict(list)
-MAX_HISTORY_TURNS = 6  # cuántos turnos previos se envían como contexto
+MAX_HISTORY_TURNS = 6
 
 
 class ChatRequest(BaseModel):
@@ -50,6 +50,14 @@ def health():
     return {"status": "ok", "store": settings.store_name, "model": settings.claude_model}
 
 
+@app.get("/")
+def serve_chat_ui():
+    """Sirve la interfaz de chat (HTML/CSS/JS) en la ruta raíz."""
+    with open("app/static/index.html", "r", encoding="utf-8") as f:
+        html = f.read()
+    return HTMLResponse(content=html)
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest):
     try:
@@ -58,7 +66,6 @@ def chat(payload: ChatRequest):
 
         result = chain.invoke({"question": payload.message, "chat_history": history})
 
-        # Actualiza el historial de la sesión
         _session_history[payload.session_id].append(HumanMessage(content=payload.message))
         _session_history[payload.session_id].append(AIMessage(content=result))
 
